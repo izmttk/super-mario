@@ -33,6 +33,7 @@ void reflush() {
     //_getch();
 }
 
+
 int main()
 {
     initgraph(WINDOWS_WIDTH, WINDOWS_HEIGHT, SHOWCONSOLE);
