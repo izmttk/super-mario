@@ -11,16 +11,17 @@
 class Mario: public BaseObject
 {
     private:
-        int direction = RIGHT;
+        int direction;
     public:
+        Mario():BaseObject(),direction(RIGHT){}
         void run() {
             if(direction == RIGHT)
-                velocity += Velocity(5, 0);
+                velocity.x(0.3);
             else
-                velocity -= Velocity(5, 0);
+                velocity.x(-0.3);
         }
         void jump() {
-            velocity.y(10);
+            velocity.y(-0.7);
         }
         void still() {
             velocity.x(0);
@@ -42,7 +43,7 @@ class Mario: public BaseObject
             int width = origin.getwidth() / figure_num;
             int height = origin.getheight();
             vector<IMAGE> imgs,masks;
-            IMAGE temp,temp_mask;
+            IMAGE temp;
 
             SetWorkingImage(&origin);
             getimage(&temp, 0, 0, width, height);
@@ -51,10 +52,10 @@ class Mario: public BaseObject
             getimage(&temp, 0, 0, width, height);
             masks.push_back(temp);
             figure.addFigure("still", imgs, masks, [this]()->bool{
-                if(velocity == 0) return true;
+                if(velocity.x() == 0) return true;
                 return false;
             });
-
+            
             imgs.clear(); masks.clear();
             for(int i = 0; i < 3; i++) {
                 SetWorkingImage(&origin);
@@ -65,7 +66,7 @@ class Mario: public BaseObject
                 masks.push_back(temp);
             }
             figure.addFigure("running", imgs, masks, [this]()->bool {
-                if(velocity.x() != 0 && velocity.y()<=0) return true;
+                if(velocity.x() != 0 && velocity.y()>=0) return true;
                 return false;
             });
 
@@ -77,13 +78,11 @@ class Mario: public BaseObject
             getimage(&temp, width * 4, 0, width, height);
             masks.push_back(temp);
             figure.addFigure("jumpping", imgs, masks, [this]()->bool {
-                if(velocity.y() > 0) return true;
+                if(velocity.y() < 0) return true;
                 return false;
             });
 
             SetWorkingImage(NULL);
         }
-        void show() {
-            figure.update(position.x(),position.y());
-        }
+
 };

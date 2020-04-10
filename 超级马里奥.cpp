@@ -1,5 +1,6 @@
 ﻿#include<conio.h>
 #include<ctime>
+#include <chrono>   
 #include "Mario.h"
 #include "Map.h"
 #include "Controller.h"
@@ -24,7 +25,7 @@ void update() {
 }
 
 //刷新画面
-void reflush(int x) {
+void reflush(double x) {
     mario.update(x);
     cleardevice();
     map.show();
@@ -40,29 +41,30 @@ int main()
 
     map.loadResource();
     mario.init();
-
     BeginBatchDraw();
 
-    const int TICKS_PER_SECOND = 25;
+    const int TICKS_PER_SECOND = 60;
     const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
     const int MAX_FRAMESKIP = 5;
 
-    DWORD next_game_tick = GetTickCount();
+    using namespace std::chrono;
+
+    auto next_game_tick = steady_clock::now();
     int loops;
-    float interpolation;
+    double interpolation;
 
     bool game_is_running = true;
     while(game_is_running) {
 
         loops = 0;
-        while(GetTickCount() > next_game_tick&& loops < MAX_FRAMESKIP) {
+        while(steady_clock::now() > next_game_tick&& loops < MAX_FRAMESKIP) {
             update();
-            next_game_tick += SKIP_TICKS;
+            next_game_tick += milliseconds(SKIP_TICKS);
             loops++;
         }
 
-        interpolation = float(GetTickCount() + SKIP_TICKS - next_game_tick)
-            / float(SKIP_TICKS);
+        interpolation = duration<double, std::milli>(steady_clock::now() + milliseconds(SKIP_TICKS) - next_game_tick).count()
+            / double(SKIP_TICKS);
         reflush(interpolation);
     }
 
