@@ -3,7 +3,7 @@
 
 void Map::init(BaseObject* h)
 {
-    loadimage(&background, _T("assert\\images\\map1.png"));
+    loadimage(&background, _T("assets\\images\\map1.png"));
     //注意坐标是从0开始的
     rocket.push_back(Rocket(-1, 0, 1, WINDOWS_HEIGHT));
     rocket.push_back(Rocket(7818, 0, 1, WINDOWS_HEIGHT));

@@ -26,8 +26,8 @@ void Mario::turn(int d) {
 
 void Mario::init() {
     LPCTSTR img_src, mask_src;
-    img_src = _T("assert\\images\\mario.png");
-    mask_src = _T("assert\\images\\mario_mask.png");
+    img_src = _T("assets\\images\\mario.png");
+    mask_src = _T("assets\\images\\mario_mask.png");
     int figure_num = 5;
     IMAGE origin, organ_mask;
     loadimage(&origin, img_src);
