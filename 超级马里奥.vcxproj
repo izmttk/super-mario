@@ -157,8 +157,8 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mario.h" />
-    <ClInclude Include="MovableObject.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="BaseObject.h" />
+    <ClInclude Include="Controller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,7 +2,7 @@
 #include<ctime>
 #include "Mario.h"
 #include "Map.h"
-#include "Player.h"
+#include "Controller.h"
 
 Map map;
 Mario mario;
@@ -16,16 +16,16 @@ void update() {
     if(GetAsyncKeyState(VK_SPACE))
         mario.jump();
     else if(GetAsyncKeyState(VK_LEFT))
-        mario.run(LEFT);
+        mario.turn(LEFT), mario.run();
     else if(GetAsyncKeyState(VK_RIGHT))
-        mario.run(RIGHT);
+        mario.turn(RIGHT), mario.run();
     else mario.still();
 
-    mario.update();
 }
 
 //刷新画面
-void reflush() {
+void reflush(int x) {
+    mario.update(x);
     cleardevice();
     map.show();
     mario.show();
@@ -39,16 +39,33 @@ int main()
     initgraph(WINDOWS_WIDTH, WINDOWS_HEIGHT, SHOWCONSOLE);
 
     map.loadResource();
-    mario.loadResource();
+    mario.init();
 
     BeginBatchDraw();
-    while(true)
-    {
-        start();
-        update();
-        reflush();
+
+    const int TICKS_PER_SECOND = 25;
+    const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+    const int MAX_FRAMESKIP = 5;
+
+    DWORD next_game_tick = GetTickCount();
+    int loops;
+    float interpolation;
+
+    bool game_is_running = true;
+    while(game_is_running) {
+
+        loops = 0;
+        while(GetTickCount() > next_game_tick&& loops < MAX_FRAMESKIP) {
+            update();
+            next_game_tick += SKIP_TICKS;
+            loops++;
+        }
+
+        interpolation = float(GetTickCount() + SKIP_TICKS - next_game_tick)
+            / float(SKIP_TICKS);
+        reflush(interpolation);
     }
+
     EndBatchDraw();
     closegraph();
-    return 0;
 }

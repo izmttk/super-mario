@@ -25,10 +25,10 @@
     <ClInclude Include="Mario.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Controller.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MovableObject.h">
+    <ClInclude Include="BaseObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

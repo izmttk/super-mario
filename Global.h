@@ -33,3 +33,79 @@ void rotateFlip(IMAGE* img)
         }
     }
 }
+
+
+class Vector {
+    private:
+    double _x;
+    double _y;
+    public:
+    Vector():_x(0), _y(0) {}
+    Vector(const double x, const double y):_x(x), _y(y) {}
+    Vector(const Vector& v):_x(v._x), _y(v._y) {}
+    Vector operator = (const Vector& rhs) {
+        _x = rhs._x;
+        _y = rhs._y;
+    }
+    Vector operator + (const Vector& rhs) const {
+        return Vector(_x + rhs._x, _y + rhs._y);
+    }
+    Vector operator - (const Vector& rhs) const {
+        return Vector(_x - rhs._x, _y - rhs._y);
+    }
+    Vector operator * (const double rhs) const {
+        return Vector(_x * rhs, _y * rhs);
+    }
+    Vector operator / (const double rhs) const {
+        if(rhs != 0)
+            return Vector(_x / rhs, _y / rhs);
+    }
+    Vector operator += (const Vector& rhs) {
+        *this = *this + rhs;
+        return *this;
+    }
+    Vector operator -= (const Vector& rhs) {
+        *this = *this - rhs;
+        return *this;
+    }
+    Vector operator *= (const double rhs) {
+        *this = *this * rhs;
+        return *this;
+    }
+    Vector operator /= (const double rhs) {
+        *this = *this / rhs;
+        return *this;
+    }
+    bool operator == (const Vector& rhs) const {
+        if(_x == rhs._x && _y == rhs._y) return true;
+        else return false;
+    }
+    bool operator == (const double rhs) const {
+        if(_x == rhs && _y == rhs) return true;
+        else return false;
+    }
+    bool operator != (const Vector& rhs) const {
+        if(*this == rhs) return false;
+        else return true;
+    }
+    double x() { return round(_x); }
+    double y() { return round(_y); }
+    void   x(double x) { _x = x; }
+    void   y(double y) { _y = y; }
+    void   set(double x, double y) { _x = x, _y = y; }
+};
+class Position: public Vector {
+    public:
+    using Vector::Vector;
+    Position(const Vector& v):Vector(v) {}
+};
+class Velocity: public Vector {
+    public:
+    using Vector::Vector;
+    Velocity(const Vector& v):Vector(v) {}
+};
+class Acceleration: public Vector {
+    public:
+    using Vector::Vector;
+    Acceleration(const Vector& v):Vector(v) {}
+};

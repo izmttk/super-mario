@@ -2,125 +2,88 @@
 
 #include<graphics.h>
 #include "Global.h"
-#include "MovableObject.h"
+#include "BaseObject.h"
 
 #define MARIO_X 0
 #define MARIO_Y 343
 
-class Mario_figure
-{
-    private:
-        IMAGE running_figure[10];
-        IMAGE running_figure_mask[10];
-        IMAGE still_figure;
-        IMAGE still_figure_mask;
-        IMAGE jump_figure;
-        IMAGE jump_figure_mask;
-        int direction;
-        void LoadImages(int, LPCTSTR, LPCTSTR);
-        void changeDirection();
-    public:   
-        Mario_figure();
-        void loadResource();
-        void show(int, int, int, int);
-};
 
-class Mario: public MovableObject
+class Mario: public BaseObject
 {
     private:
-        Mario_figure figure;
+        int direction = RIGHT;
     public:
-        Mario();
-        void loadResource();
-        void show();
-};
-
-inline void Mario_figure::LoadImages(int figure_num, LPCTSTR f_src, LPCTSTR fm_src)
-{
-    IMAGE origin, organ_mask;
-    loadimage(&origin, f_src);
-    loadimage(&organ_mask, fm_src);
-    int width = origin.getwidth()/figure_num;
-    int height = origin.getheight();
-
-    SetWorkingImage(&origin);
-    getimage(&still_figure, 0, 0, width, height);
-    for(int i = 0; i<3; i++)
-        getimage(&running_figure[i], width+width*i, 0, width, height);
-    getimage(&jump_figure, width*4, 0, width, height);
-
-    SetWorkingImage(&organ_mask);
-    getimage(&still_figure_mask, 0, 0, width, height);
-    for(int i = 0; i<3; i++)
-        getimage(&running_figure_mask[i], width+width*i, 0, width, height);
-    getimage(&jump_figure_mask, width*4, 0, width, height);
-
-    SetWorkingImage(NULL);
-}
-
-inline void Mario_figure::changeDirection()
-{
-    rotateFlip(&still_figure);
-    rotateFlip(&still_figure_mask);
-    rotateFlip(&jump_figure);
-    rotateFlip(&jump_figure_mask);
-    for(int i = 0; i < 3; i++)
-        rotateFlip(&running_figure[i]),
-        rotateFlip(&running_figure_mask[i]);
-}
-
-
-inline Mario_figure::Mario_figure():direction(RIGHT){}
-
-inline void Mario_figure::loadResource()
-{
-    LoadImages(5, _T("assert\\images\\mario.png"), _T("assert\\images\\mario_mask.png"));
-}
-
-inline void Mario_figure::show(int status, int drt, int x, int y)
-{
-    static clock_t last = clock();//定时器
-    static int running_cnt = 0;//动作变化计数
-    if(direction != drt) {
-        changeDirection();
-        direction = drt;
-    }
-    switch(status)
-    {
-        case RUNNING:
-            putimage(x, y, &running_figure_mask[running_cnt], NOTSRCERASE);
-            putimage(x, y,&running_figure[running_cnt], SRCINVERT);
-            if((clock() - last) >= 100) {//定时器，动作变化间隔100ms
-                last = clock();
-                running_cnt = (running_cnt + 1) % 3;
+        void run() {
+            if(direction == RIGHT)
+                velocity += Velocity(5, 0);
+            else
+                velocity -= Velocity(5, 0);
+        }
+        void jump() {
+            velocity.y(10);
+        }
+        void still() {
+            velocity.x(0);
+        }
+        void turn(int d) {
+            if(direction != d) {
+                direction = !direction;
+                figure.turn();
             }
-            break;
-        case STILL:
-            putimage(x, y, &still_figure_mask, NOTSRCERASE);
-            putimage(x, y, &still_figure, SRCINVERT);
-            running_cnt = 0;
-            break;
-        case JUMPPING:
-            putimage(x, y, &jump_figure_mask, NOTSRCERASE);
-            putimage(x, y, &jump_figure, SRCINVERT);
-            running_cnt = 0;
-            break;
-    }
-}
+        }
+        void init() {
+            LPCTSTR img_src, mask_src;
+            img_src = _T("assert\\images\\mario.png");
+            mask_src = _T("assert\\images\\mario_mask.png");
+            int figure_num = 5;
+            IMAGE origin, organ_mask;
+            loadimage(&origin, img_src);
+            loadimage(&organ_mask, mask_src);
+            int width = origin.getwidth() / figure_num;
+            int height = origin.getheight();
+            vector<IMAGE> imgs,masks;
+            IMAGE temp,temp_mask;
 
+            SetWorkingImage(&origin);
+            getimage(&temp, 0, 0, width, height);
+            imgs.push_back(temp);
+            SetWorkingImage(&organ_mask);
+            getimage(&temp, 0, 0, width, height);
+            masks.push_back(temp);
+            figure.addFigure("still", imgs, masks, [this]()->bool{
+                if(velocity == 0) return true;
+                return false;
+            });
 
+            imgs.clear(); masks.clear();
+            for(int i = 0; i < 3; i++) {
+                SetWorkingImage(&origin);
+                getimage(&temp, width + width * i, 0, width, height);
+                imgs.push_back(temp);
+                SetWorkingImage(&organ_mask);
+                getimage(&temp, width + width * i, 0, width, height);
+                masks.push_back(temp);
+            }
+            figure.addFigure("running", imgs, masks, [this]()->bool {
+                if(velocity.x() != 0 && velocity.y()<=0) return true;
+                return false;
+            });
 
-inline Mario::Mario():MovableObject(MARIO_X,MARIO_Y){}
+            imgs.clear(); masks.clear();
+            SetWorkingImage(&origin);
+            getimage(&temp, width * 4, 0, width, height);
+            imgs.push_back(temp);
+            SetWorkingImage(&organ_mask);
+            getimage(&temp, width * 4, 0, width, height);
+            masks.push_back(temp);
+            figure.addFigure("jumpping", imgs, masks, [this]()->bool {
+                if(velocity.y() > 0) return true;
+                return false;
+            });
 
-inline void Mario::loadResource()
-{
-    figure.loadResource();
-}
-
-inline void Mario::show()
-{
-    if(is_running)figure.show(RUNNING, direction, getX(), getY());
-    else if(is_jumping)figure.show(JUMPPING, direction, getX(), getY());
-    else
-        figure.show(STILL, direction, getX(), getY());
-}
+            SetWorkingImage(NULL);
+        }
+        void show() {
+            figure.update(position.x(),position.y());
+        }
+};

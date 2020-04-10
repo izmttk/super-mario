@@ -1,7 +1,7 @@
 #pragma once
 #include<windows.h>
 
-class Player
+class Controller
 {
     private:
 
@@ -14,7 +14,7 @@ class Player
 
 
 
-inline void Player::getControl()
+inline void Controller::getControl()
 {
 
 }
