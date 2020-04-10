@@ -12,15 +12,15 @@ struct FigureData {
 class Figure {
     private:
         vector<FigureData> figures;
-        int width;
-        int height;
+        int _width;
+        int _height;
         string status;
     public:
-        Figure():figures(),width(0),height(0),status("default") {}
+        Figure():figures(),_width(0),_height(0),status("default") {}
         void addFigure(string name, vector<IMAGE> imgs, vector<IMAGE> masks, function<bool(void)> tigger) {
             if(figures.empty() && !imgs.empty()) {
-                width = imgs.front().getwidth();
-                height = imgs.front().getheight();
+                _width = imgs.front().getwidth();
+                _height = imgs.front().getheight();
             }
             figures.push_back(FigureData{name, imgs, masks, tigger});
         }
@@ -54,10 +54,10 @@ class Figure {
             }
         }
         int width() {
-            return width;
+            return _width;
         }
         int height() {
-            return height;
+            return _height;
         }
 };
 
