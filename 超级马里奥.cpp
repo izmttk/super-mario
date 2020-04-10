@@ -3,14 +3,15 @@
 #include <chrono>   
 #include "Mario.h"
 #include "Map.h"
-#include "Controller.h"
+//#include "Controller.h"
 
-Map map;
 Mario mario;
+Map map;
 //开始界面
 void start() {
 
 }
+
 
 //更新实时数据
 void update() {
@@ -27,6 +28,7 @@ void update() {
 //刷新画面
 void reflush(double x) {
     mario.update(x);
+    map.update();
     cleardevice();
     map.show();
     mario.show();
@@ -39,8 +41,9 @@ int main()
 {
     initgraph(WINDOWS_WIDTH, WINDOWS_HEIGHT, SHOWCONSOLE);
 
-    map.loadResource();
     mario.init();
+    map.init(&mario);
+
     BeginBatchDraw();
 
     const int TICKS_PER_SECOND = 60;

@@ -1,36 +1,25 @@
 #pragma once
+#ifndef _MAP_H_
+#define _MAP_H_
 
-#include<graphics.h>
+
+#include <graphics.h>
 #include "Global.h"
+#include "Rocket.h"
 
 class Map
 {
     private:
         IMAGE background;
+        vector<Rocket> rocket;
+        BaseObject*  hero;
     public:
-        Map();
-        ~Map();
-        void loadResource();
+        Map():background(NULL), rocket({}),hero(NULL){};
+        void init(BaseObject* h);
         void show();
-
+        void update();
+        void check_crash();
 };
 
-Map::Map()
-{
 
-}
-
-Map::~Map()
-{
-
-}
-
-inline void Map::loadResource()
-{
-    loadimage(&background, _T("assert\\images\\map1.png"));
-}
-
-inline void Map::show()
-{
-    putimage(0, 0, &background);
-}
+#endif
