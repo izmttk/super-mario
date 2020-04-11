@@ -1,7 +1,13 @@
 #pragma once
+
+#ifndef _PLAYER_H_
+#define _PLAYER_H_
+
+
+
 #include<windows.h>
 
-class Controller
+class Player
 {
     private:
 
@@ -12,9 +18,4 @@ class Controller
 };
 
 
-
-
-inline void Controller::getControl()
-{
-
-}
+#endif

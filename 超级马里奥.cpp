@@ -3,7 +3,7 @@
 #include <chrono>   
 #include "Mario.h"
 #include "Map.h"
-//#include "Controller.h"
+//#include "Player.h"
 
 Mario mario;
 Map map;
@@ -13,27 +13,40 @@ void start() {
 }
 
 
-//更新实时数据
+//更新数据
 void update() {
-    if(GetAsyncKeyState(VK_SPACE))
-        mario.jump();
-    else if(GetAsyncKeyState(VK_LEFT))
-        mario.turn(LEFT), mario.run();
-    else if(GetAsyncKeyState(VK_RIGHT))
-        mario.turn(RIGHT), mario.run();
+    if(GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT)) {
+        if(GetAsyncKeyState(VK_SPACE))
+            mario.jump();
+        if(GetAsyncKeyState(VK_LEFT))
+            mario.turn(LEFT), mario.run();
+        if(GetAsyncKeyState(VK_RIGHT))
+            mario.turn(RIGHT), mario.run();
+    }
     else mario.still();
-
 }
 
 //刷新画面
-void reflush(double x) {
-    mario.update(x);
+void reflush(double time) {
+    mario.update(time);
     map.update();
     cleardevice();
-    map.show();
-    mario.show();
+
+    //offset:地图和人物相对视窗位移，用于使视窗跟随人物移动
+    //开头处人物未超过视窗宽度1/2，不发生位移
+    Vector offset(0, 0);
+    if(mario.position.x() + mario.width() / 2 >= WINDOWS_WIDTH / 2 && 
+       mario.position.x() + mario.width() / 2 <= map.width() - WINDOWS_WIDTH / 2) {
+        //始终保持人物居中
+        offset.x(-(mario.position.x() + mario.width() / 2 - WINDOWS_WIDTH / 2));
+    }
+    else if(mario.position.x() + mario.width() / 2 > map.width() - WINDOWS_WIDTH / 2) {
+        //人物距离结束处不足窗口1/2，停止位移
+        offset.x(-(map.width() - WINDOWS_WIDTH));
+    }
+    map.show(offset);
+    mario.show(offset);
     FlushBatchDraw();
-    //_getch();
 }
 
 

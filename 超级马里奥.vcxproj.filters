@@ -29,6 +29,9 @@
     <ClCompile Include="Global.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -40,13 +43,13 @@
     <ClInclude Include="Mario.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="BaseObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Rocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

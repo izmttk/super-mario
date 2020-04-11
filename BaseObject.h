@@ -82,19 +82,18 @@ class BaseObject
     private:
         int _width;
         int _height;
-    protected:
+    public:
         Position position;
         Velocity velocity;
         Acceleration acceleration;
         Figure figure;
-    public:
         BaseObject():_width(0),_height(0),position(), velocity(), acceleration(0, 0.004), figure(){}
         int  width();
         int  height();
         void width(int w);
         void height(int h);
         void update(double time);
-        void show();
+        void show(Vector offset);
         bool block_crash(BaseObject& t);
         bool pxiel_crash();
 };

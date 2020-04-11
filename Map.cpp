@@ -4,6 +4,8 @@
 void Map::init(BaseObject* h)
 {
     loadimage(&background, _T("assets\\images\\map1.png"));
+    _width = background.getwidth();
+    _height = background.getheight();
     //注意坐标是从0开始的
     rocket.push_back(Rocket(-1, 0, 1, WINDOWS_HEIGHT));
     rocket.push_back(Rocket(7818, 0, 1, WINDOWS_HEIGHT));
@@ -14,11 +16,16 @@ void Map::init(BaseObject* h)
     hero = h;
 }
 
-void Map::show()
+void Map::show(Vector offset)
 {
-    putimage(0, 0, &background);
+    putimage(0 + static_cast<int>(offset.x()), 0 + static_cast<int>(offset.y()), &background);
 }
-
+int Map::width() {
+    return _width;
+}
+int Map::height() {
+    return _height;
+}
 void Map::update()
 {
     check_crash();

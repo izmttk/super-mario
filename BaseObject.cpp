@@ -119,8 +119,8 @@ void BaseObject::update(double time) {
     //position += velocity * time;
     velocity += acceleration * time;
 }
-void BaseObject::show() {
-    figure.update(static_cast<int>(round(position.x())), static_cast<int>(round(position.y())));
+void BaseObject::show(Vector offset) {
+    figure.update(static_cast<int>(round(position.x()) + offset.x()), static_cast<int>(round(position.y()) + offset.y()));
 }
 bool BaseObject::block_crash(BaseObject& t) {
     //if(
