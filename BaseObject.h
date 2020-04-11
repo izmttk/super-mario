@@ -93,7 +93,7 @@ class BaseObject
         void width(int w);
         void height(int h);
         void update(double time);
-        void show(Vector offset);
+        void show(Vector& offset);
         bool block_crash(BaseObject& t);
         bool pxiel_crash();
 };

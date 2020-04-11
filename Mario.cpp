@@ -1,16 +1,16 @@
 #include "Mario.h"
 
-void Mario::run() {
+void Mario::run(double speed) {
     if(direction == RIGHT)
-        velocity.x(0.3);
+        velocity.x(speed);
     else
-        velocity.x(-0.3);
+        velocity.x(-speed);
 }
 
-void Mario::jump() {
+void Mario::jump(double speed) {
     if(figure.status() == "jumpping" || figure.status() == "falling") return;
     position.y(position.y());
-    velocity.y(-1);
+    velocity.y(speed);
 }
 
 void Mario::still() {
