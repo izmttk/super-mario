@@ -2,8 +2,8 @@
 #ifndef  _GLOBAL_H_
 #define _GLOBAL_H_
 
-#define WINDOWS_WIDTH 680
-#define WINDOWS_HEIGHT 490
+#define WINDOWS_WIDTH 700
+#define WINDOWS_HEIGHT 504
 
 #define DEBUG
 #ifdef DEBUG

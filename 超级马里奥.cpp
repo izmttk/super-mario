@@ -68,7 +68,6 @@ int main()
     auto next_game_tick = steady_clock::now();
     int loops;
     double interpolation;
-
     bool game_is_running = true;
     while(game_is_running) {
 

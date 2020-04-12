@@ -58,15 +58,17 @@ struct FigureData {
     vector<IMAGE> masks;
     std::function<bool(void)> tigger;
 };
-
+using namespace std::chrono;
 class Figure {
     private:
         vector<FigureData> figures;
+        int figure_cnt = 0;
+        steady_clock::time_point time_tick = steady_clock::now();
         int _width;
         int _height;
         string _status;
     public:
-        Figure():figures(),_width(0),_height(0),_status("default") {}
+        Figure():figures(), figure_cnt(0),_width(0),_height(0),_status("default") {}
         void addFigure(string name, vector<IMAGE> imgs, vector<IMAGE> masks, function<bool(void)> tigger);
         void update(int x, int y);
         void turn();
@@ -94,7 +96,7 @@ class BaseObject
         void height(int h);
         void update(double time);
         void show(Vector& offset);
-        bool block_crash(BaseObject& t);
+        bool block_crash(BaseObject& t, bool left_exist_object, bool right_exist_object);
         bool pxiel_crash();
 };
 

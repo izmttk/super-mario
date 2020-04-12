@@ -13,6 +13,8 @@ class Map
     private:
         IMAGE background;
         vector<Rocket> rocket;
+        //vector<Rocket> rocket_sorted_by_left;
+        //vector<Rocket> rocket_sorted_by_right;
         BaseObject*  hero;
         int _width;
         int _height;
@@ -23,6 +25,8 @@ class Map
         int width();
         int height();
         void update();
+        bool left_exist_object(BaseObject& t);
+        bool right_exist_object(BaseObject& t);
         void check_crash();
 };
 

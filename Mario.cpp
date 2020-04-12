@@ -34,27 +34,11 @@ void Mario::init() {
     loadimage(&organ_mask, mask_src);
     int width = origin.getwidth() / figure_num;
     int height = origin.getheight();
-
     this->width(width);
     this->height(height);
     vector<IMAGE> imgs, masks;
     IMAGE temp;
 
-    SetWorkingImage(&origin);
-    getimage(&temp, 0, 0, width, height);
-    imgs.push_back(temp);
-    SetWorkingImage(&organ_mask);
-    getimage(&temp, 0, 0, width, height);
-    masks.push_back(temp);
-    figure.addFigure("still", imgs, masks, [this]()->bool {
-        if(velocity.x() == 0 && velocity.y() == 0) return true;
-        return false;
-    });
-    figure.addFigure("falling", imgs, masks, [this]()->bool {
-        if(velocity.y() > 0) return true;
-        return false;
-    });
-    imgs.clear(); masks.clear();
     for(int i = 0; i < 3; i++) {
         SetWorkingImage(&origin);
         getimage(&temp, width + width * i, 0, width, height);
@@ -65,6 +49,22 @@ void Mario::init() {
     }
     figure.addFigure("running", imgs, masks, [this]()->bool {
         if(velocity.x() != 0 && velocity.y() == 0) return true;
+        return false;
+    });
+
+    imgs.clear(); masks.clear();
+    SetWorkingImage(&origin);
+    getimage(&temp, 0, 0, width, height);
+    imgs.push_back(temp);
+    SetWorkingImage(&organ_mask);
+    getimage(&temp, 0, 0, width, height);
+    masks.push_back(temp);
+    figure.addFigure("still", imgs, masks, [this]()->bool {
+        if(velocity.x() == 0 && velocity.y() == 0)  return true;
+        return false;
+    });
+    figure.addFigure("falling", imgs, masks, [this]()->bool {
+        if(velocity.y() > 0) return true;
         return false;
     });
 

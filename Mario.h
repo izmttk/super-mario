@@ -3,7 +3,7 @@
 #define _MARIO_H_
 
 #define NORMAL_RUN_SPEED 0.3
-#define NORMAL_JUMP_SPEED -1.2
+#define NORMAL_JUMP_SPEED -1.1
 
 #include<graphics.h>
 #include "BaseObject.h"

@@ -62,21 +62,20 @@ void Figure::update(int x, int y) {
     for(auto& i : figures)
     {
         if(i.tigger()) {
-            using namespace std::chrono;
-            static auto time_tick = steady_clock::now();
-            static size_t cnt = 0;
             if(_status != i.name) {
                 time_tick = steady_clock::now();
-                cnt = 0;
+                figure_cnt = 0;
                 _status = i.name;
             }
-            putimage(x, y, &i.masks[i.images.size() - cnt - 1], NOTSRCERASE);
-            putimage(x, y, &i.images[i.images.size() - cnt - 1], SRCINVERT);
+            //cout << figure_cnt << endl;
+            //没人发现我写的bug
+            putimage(x, y, &i.masks[figure_cnt % i.images.size()], NOTSRCERASE);
+            putimage(x, y, &i.images[figure_cnt % i.images.size()], SRCINVERT);
             if((steady_clock::now() - time_tick) >= milliseconds(100)) {
-                cnt = (cnt + 1) % i.images.size();
+                figure_cnt = (figure_cnt + 1) % i.images.size();
                 time_tick = steady_clock::now();
             }
-
+            return;
         }
     }
 }
@@ -122,7 +121,7 @@ void BaseObject::update(double time) {
 void BaseObject::show(Vector& offset) {
     figure.update(static_cast<int>(round(position.x()) + offset.x()), static_cast<int>(round(position.y()) + offset.y()));
 }
-bool BaseObject::block_crash(BaseObject& t) {
+bool BaseObject::block_crash(BaseObject& t,bool left_exist_object,bool right_exist_object) {
     //if(
     //    position.x() > t.position.x() - figure.width() && position.x() < t.position.x() + t.figure.width()
     //    &&
@@ -156,20 +155,24 @@ bool BaseObject::block_crash(BaseObject& t) {
     //左碰撞
     if(px + width() >= tpx && px < tpx &&
        py + height() >= tpy && py <= tpy + t.height()) {
-        if(velocity.x() > 0) {
-            velocity.x(0);
-            position.x((double)tpx - width());
+        if(!left_exist_object) {
+            if(velocity.x() > 0) {
+                velocity.x(0);
+                position.x((double)tpx - width());
+            }
+            return true;
         }
-        return true;
     }
     //右碰撞
     if(px + width() > tpx + t.width()&& px <= tpx + t.width() &&
        py + height() >= tpy && py <= tpy + t.height()) {
-        if(velocity.x() < 0) {
-            velocity.x(0);
-            position.x((double)tpx + t.width());
+        if(!right_exist_object) {
+            if(velocity.x() < 0) {
+                velocity.x(0);
+                position.x((double)tpx + t.width());
+            }
+            return true;
         }
-        return true;
     }
     return false;
 }
