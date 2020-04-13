@@ -5,11 +5,14 @@ void Mario::run(double speed) {
         velocity.x(speed);
     else
         velocity.x(-speed);
+    if(side_crash == 1 && velocity.x() < 0)velocity.x(0);
+    if(side_crash == 2 && velocity.x() > 0)velocity.x(0);
+    if(side_crash == 3)velocity.x(0);
+
 }
 
 void Mario::jump(double speed) {
     if(figure.status() == "jumpping" || figure.status() == "falling") return;
-    position.y(position.y());
     velocity.y(speed);
 }
 
@@ -39,6 +42,22 @@ void Mario::init() {
     vector<IMAGE> imgs, masks;
     IMAGE temp;
 
+    SetWorkingImage(&origin);
+    getimage(&temp, 0, 0, width, height);
+    imgs.push_back(temp);
+    SetWorkingImage(&organ_mask);
+    getimage(&temp, 0, 0, width, height);
+    masks.push_back(temp);
+    figure.addFigure("still", imgs, masks, [this]()->bool {
+        if(figure.status() == "jumpping") return false;
+        if(velocity.x() == 0 && velocity.y() == 0)  return true;
+        return false;
+    });
+    figure.addFigure("falling", imgs, masks, [this]()->bool {
+        if(velocity.y() > 0) return true;
+        return false;
+    });
+    imgs.clear(); masks.clear();
     for(int i = 0; i < 3; i++) {
         SetWorkingImage(&origin);
         getimage(&temp, width + width * i, 0, width, height);
@@ -48,25 +67,11 @@ void Mario::init() {
         masks.push_back(temp);
     }
     figure.addFigure("running", imgs, masks, [this]()->bool {
+        if(figure.status() == "jumpping") return false;
         if(velocity.x() != 0 && velocity.y() == 0) return true;
         return false;
     });
 
-    imgs.clear(); masks.clear();
-    SetWorkingImage(&origin);
-    getimage(&temp, 0, 0, width, height);
-    imgs.push_back(temp);
-    SetWorkingImage(&organ_mask);
-    getimage(&temp, 0, 0, width, height);
-    masks.push_back(temp);
-    figure.addFigure("still", imgs, masks, [this]()->bool {
-        if(velocity.x() == 0 && velocity.y() == 0)  return true;
-        return false;
-    });
-    figure.addFigure("falling", imgs, masks, [this]()->bool {
-        if(velocity.y() > 0) return true;
-        return false;
-    });
 
     imgs.clear(); masks.clear();
     SetWorkingImage(&origin);

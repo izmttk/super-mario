@@ -59,28 +59,33 @@ int main()
 
     BeginBatchDraw();
 
-    const int TICKS_PER_SECOND = 60;
-    const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
-    const int MAX_FRAMESKIP = 5;
+    const int max_ups = 120;
+    const int max_fps = 120;
+
+    const int update_skip_time = 1000 / max_ups;
+    const int frame_skip_time = 1000 / max_fps;
 
     using namespace std::chrono;
 
-    auto next_game_tick = steady_clock::now();
-    int loops;
-    double interpolation;
+    auto update_time_tick = steady_clock::now();
+    auto frame_time_tick = steady_clock::now();
+
+    double update_time_interval;
+    double frame_time_interval;
+
     bool game_is_running = true;
     while(game_is_running) {
-
-        loops = 0;
-        while(steady_clock::now() > next_game_tick&& loops < MAX_FRAMESKIP) {
+        auto now = steady_clock::now();
+        update_time_interval = duration<double, std::milli>(now - update_time_tick).count();
+        if(update_time_interval >= update_skip_time) {
             update();
-            next_game_tick += milliseconds(SKIP_TICKS);
-            loops++;
+            update_time_tick = now;
         }
-
-        interpolation = duration<double, std::milli>(steady_clock::now() + milliseconds(SKIP_TICKS) - next_game_tick).count()
-            / double(SKIP_TICKS);
-        reflush(interpolation);
+        frame_time_interval = duration<double, std::milli>(now - frame_time_tick).count();
+        if(frame_time_interval >= frame_skip_time) {
+            reflush(frame_time_interval);
+            frame_time_tick = now;
+        }
     }
 
     EndBatchDraw();

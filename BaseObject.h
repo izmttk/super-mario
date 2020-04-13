@@ -9,7 +9,7 @@
 #include <chrono>
 #include "Global.h"
 
-
+#define GRAVITY 0.0036
 
 class Vector {
     private:
@@ -31,8 +31,8 @@ class Vector {
     bool operator == (const Vector& rhs) const;
     bool operator == (const double rhs) const;
     bool operator != (const Vector& rhs) const;
-    double x();
-    double y();
+    double x() const;
+    double y() const;
     void   x(double x);
     void   y(double y);
     void   set(double x, double y);
@@ -40,16 +40,22 @@ class Vector {
 class Position: public Vector {
     public:
     using Vector::Vector;
+    Position():Vector(){}
+    Position(const Vector& t) { x(t.x()), y(t.y()); }
     using Vector::operator=;
 };
 class Velocity: public Vector {
     public:
     using Vector::Vector;
+    Velocity():Vector() {}
+    Velocity(const Vector& t) { x(t.x()), y(t.y()); }
     using Vector::operator=;
 };
 class Acceleration: public Vector {
     public:
     using Vector::Vector;
+    Acceleration():Vector() {}
+    Acceleration(const Vector& t) { x(t.x()), y(t.y()); }
     using Vector::operator=;
 };
 struct FigureData {
@@ -89,15 +95,14 @@ class BaseObject
         Velocity velocity;
         Acceleration acceleration;
         Figure figure;
-        BaseObject():_width(0),_height(0),position(), velocity(), acceleration(0, 0.004), figure(){}
+        BaseObject():_width(0),_height(0),position(), velocity(), acceleration(0, GRAVITY), figure(){}
+        int side_crash = 0;
         int  width();
         int  height();
         void width(int w);
         void height(int h);
         void update(double time);
         void show(Vector& offset);
-        bool block_crash(BaseObject& t, bool left_exist_object, bool right_exist_object);
-        bool pxiel_crash();
 };
 
 

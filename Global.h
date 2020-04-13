@@ -1,7 +1,6 @@
 #pragma once
 #ifndef  _GLOBAL_H_
 #define _GLOBAL_H_
-
 #define WINDOWS_WIDTH 700
 #define WINDOWS_HEIGHT 504
 

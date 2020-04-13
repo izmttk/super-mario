@@ -45,8 +45,8 @@ bool Vector::operator != (const Vector& rhs) const {
     if(*this == rhs) return false;
     else return true;
 }
-double Vector::x() { return (_x); }
-double Vector::y() { return (_y); }
+double Vector::x() const { return (_x); }
+double Vector::y() const { return (_y); }
 void   Vector::x(double x) { _x = x; }
 void   Vector::y(double y) { _y = y; }
 void   Vector::set(double x, double y) { _x = x, _y = y; }
@@ -62,6 +62,8 @@ void Figure::update(int x, int y) {
     for(auto& i : figures)
     {
         if(i.tigger()) {
+            if(i.name!="rock0"&&i.name!="rock1")
+            //cout << i.name << endl;
             if(_status != i.name) {
                 time_tick = steady_clock::now();
                 figure_cnt = 0;
@@ -121,63 +123,5 @@ void BaseObject::update(double time) {
 void BaseObject::show(Vector& offset) {
     figure.update(static_cast<int>(round(position.x()) + offset.x()), static_cast<int>(round(position.y()) + offset.y()));
 }
-bool BaseObject::block_crash(BaseObject& t,bool left_exist_object,bool right_exist_object) {
-    //if(
-    //    position.x() > t.position.x() - figure.width() && position.x() < t.position.x() + t.figure.width()
-    //    &&
-    //    position.y() > t.position.y() - figure.height() && position.y() < t.position.y() + t.figure.height()
-    //    )
-    //    return true;
-    //cout << t.position.x() << " " << t.position.y() << endl;
-    int px = static_cast<int>(round(position.x())),
-        py = static_cast<int>(round(position.y())), 
-        tpx = static_cast<int>(round(t.position.x())),
-        tpy = static_cast<int>(round(t.position.y()));
-
-    //ÉÏÅö×²(Ïà¶Ô±»×²ÎïÌå)
-    if(px + width() -1 >= tpx && px <= tpx + t.width() -1 &&
-       py + height() >= tpy && py < tpy) {
-        if(velocity.y() > 0) {
-            velocity.y(0);
-            position.y((double)tpy - height());
-        }
-        return true;
-    }
-    //ÏÂÅö×²
-    if(px + width() -1 >= tpx && px <= tpx + t.width() -1 &&
-       py + height() -1 > tpy + height() -1 && py <= tpy + t.height()) {
-        if(velocity.y() < 0) {
-            velocity.y(0);
-            position.y((double)tpy + t.height());
-        }
-        return true;
-    }
-    //×óÅö×²
-    if(px + width() >= tpx && px < tpx &&
-       py + height() >= tpy && py <= tpy + t.height()) {
-        if(!left_exist_object) {
-            if(velocity.x() > 0) {
-                velocity.x(0);
-                position.x((double)tpx - width());
-            }
-            return true;
-        }
-    }
-    //ÓÒÅö×²
-    if(px + width() > tpx + t.width()&& px <= tpx + t.width() &&
-       py + height() >= tpy && py <= tpy + t.height()) {
-        if(!right_exist_object) {
-            if(velocity.x() < 0) {
-                velocity.x(0);
-                position.x((double)tpx + t.width());
-            }
-            return true;
-        }
-    }
-    return false;
-}
-//bool BaseObject::pxiel_crash() {
-//
-//}
 
 

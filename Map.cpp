@@ -12,7 +12,7 @@ void Map::init(BaseObject* h)
     //单元格为35*35的方格，全地图横向228个单元，纵向14个单元
     //注意坐标是从0开始的
     //测试用
-    rocket.push_back(Rocket(0 * unit_length, 10 * unit_length, 1 * unit_length, 1 * unit_length, "rock1"));
+    rocket.push_back(Rocket(0 * unit_length, 10 * unit_length, 1 * unit_length , 1 * unit_length, "rock1"));
     rocket.push_back(Rocket(0 * unit_length, 11 * unit_length, 1 * unit_length, 1 * unit_length, "rock1"));
     rocket.push_back(Rocket(2 * unit_length, 10 * unit_length, 1 * unit_length, 1 * unit_length, "rock1"));
     rocket.push_back(Rocket(2 * unit_length, 11 * unit_length, 1 * unit_length, 1 * unit_length, "rock1"));
@@ -118,11 +118,44 @@ bool Map::right_exist_object(BaseObject& t)
 
 void Map::check_crash()
 {
+    int flag = 0;
     for(auto &i : rocket) {
-        if(i.position.x() > hero->position.x() + hero->width() || i.position.x() + i.width() < hero->position.x()) 
-            continue;
-        hero->block_crash(i, left_exist_object(i), right_exist_object(i));
+        //if(i.position.x() > hero->position.x() + hero->width() || i.position.x() + i.width() < hero->position.x()) 
+        //    continue;
+        //hero->block_crash(i, left_exist_object(i), right_exist_object(i));
+        bool l = left_exist_object(i),
+             r = right_exist_object(i);
+        string str = collision(*hero, i,l,r);
+        if(str == "left")
+            flag = (1<<1)|flag;//0没有 1右 2左 3左右
+        if(str == "right")
+            flag = (1<<0)|flag;
+        if(str != "") {
+            //cout << str <<' '<<i.type()<<' '<<i.position.x()/36<<' '<<i.position.y()/36<< endl;
+            if(str == "top") {
+                if(hero->velocity.y() > 0)
+                    hero->velocity.y(0);
+                hero->position.y(i.position.y() - hero->height());
+            }
+            else if(str == "bottom") {
+                if(hero->velocity.y()<0)
+                    hero->velocity.y(0);
+                hero->position.y(i.position.y() + i.height());
+            }
+            else if(str == "left") {
+                if(hero->velocity.x() > 0)
+                    hero->velocity.x(0);
+                hero->position.x(i.position.x() - hero->width());
+            }
+            else if(str == "right") {
+                if(hero->velocity.x() < 0)
+                hero->velocity.x(0);
+                hero->position.x(i.position.x() + i.width());
+            }
+        }
     }
+    if(flag) hero->side_crash = flag;
+    else hero->side_crash = 0;
 
     //vector<Rocket>:: reverse_iterator l;
     //vector<Rocket>::iterator r;
@@ -149,4 +182,48 @@ void Map::check_crash()
     //    //cout << (*l.base()--).position.x() + (*l.base()--).width() - 1 << ' ' << (*(r)).position.x() << endl;
     //}
 
+}
+
+
+string Map::collision(BaseObject &a,BaseObject &b,bool left_exist_object,bool right_exist_object) {
+
+    int ax = static_cast<int>(round(a.position.x())),
+        ay = static_cast<int>(round(a.position.y())),
+        bx = static_cast<int>(round(b.position.x())),
+        by = static_cast<int>(round(b.position.y()));
+    //上碰撞(a相对被撞物体b)
+    if(ax + a.width() > bx && ax < bx + b.width() &&
+       ay + a.height() >= by && ay < by) {
+        if(a.position.x() < b.position.x() && a.position.x() + a.width() < b.position.x() + b.width() && a.position.x() + a.width() - b.position.x() < a.position.y() + a.height() - b.position.y())
+            return "left";
+        if(a.position.x() > b.position.x() && a.position.x() + a.width() > b.position.x() + b.width() && b.position.x() + b.width() - a.position.x() < a.position.y() + a.height() - b.position.y())
+            return "right";
+        return "top";
+    }
+    //下碰撞
+    else if(ax + a.width() > bx && ax < bx + b.width() &&
+       ay + a.height() > by + b.height() && ay < by + b.height()) {
+        if(a.position.x() < b.position.x() && a.position.x() + a.width() < b.position.x() + b.width() && a.position.x() + a.width() - b.position.x() < b.position.y() + b.height() - a.position.y())
+            return "left";
+        if(a.position.x() > b.position.x() && a.position.x() + a.width() > b.position.x() + b.width() && b.position.x() + b.width() - a.position.x() < b.position.y() + b.height() - a.position.y())
+            return "right";
+        return "bottom";
+    }
+    //左碰撞
+    else if(ax + a.width() >= bx && ax < bx &&
+       ay + a.height() >= by && ay < by + b.height()) {
+        if(!left_exist_object) {
+            return "left";
+        }
+    }
+    //右碰撞
+    else if(ax + a.width() > bx + b.width() && ax <= bx + b.width() &&
+       ay + a.height() >= by && ay < by + b.height()) {
+        if(!right_exist_object) {
+            //cout << "a.x:" << ax << "\t\ta.y:" << ay << "\t\ta.width:" << a.width() << "\ta.height:" << a.height() << endl;
+            //cout << "b.x:" << bx << "\t\tb.y:" << by << "\t\tb.width:" << b.width() << "\tb.height:" << b.height() << endl;
+            return "right";
+        }
+    }
+    return "";
 }

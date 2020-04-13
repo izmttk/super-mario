@@ -28,6 +28,7 @@ class Map
         bool left_exist_object(BaseObject& t);
         bool right_exist_object(BaseObject& t);
         void check_crash();
+        string collision(BaseObject& a, BaseObject& b, bool left_exist_object, bool right_exist_object);
 };
 
 
