@@ -80,6 +80,14 @@ void Map::init(BaseObject* h)
     //});
     for(auto &i : rocket) i.init();
 
+
+    //安放管道
+    pipe.push_back(Pipe(28 * unit_length, 10 * unit_length, 2 * unit_length, 2 * unit_length));
+    pipe.push_back(Pipe(38 * unit_length, 9 * unit_length, 2 * unit_length, 3 * unit_length));
+    pipe.push_back(Pipe(46 * unit_length, 8 * unit_length, 2 * unit_length, 4 * unit_length));
+    pipe.push_back(Pipe(57 * unit_length, 8 * unit_length, 2 * unit_length, 4 * unit_length));
+    pipe.push_back(Pipe(163 * unit_length, 10 * unit_length, 2 * unit_length, 2 * unit_length));
+    pipe.push_back(Pipe(179 * unit_length, 10 * unit_length, 2 * unit_length, 2 * unit_length));
 }
 
 void Map::show(Vector offset)
@@ -105,12 +113,18 @@ bool Map::left_exist_object(BaseObject &t)
     for(auto& i : rocket)
         if(t.position.x() == i.position.x() + i.width() && t.position.y() == i.position.y())
             return true;
+    for(auto& i : pipe)
+        if(t.position.x() == i.position.x() + i.width() && t.position.y() == i.position.y())
+            return true;
     return false;
 }
 
 bool Map::right_exist_object(BaseObject& t)
 {
     for(auto& i : rocket)
+        if(t.position.x() + t.width() == i.position.x() && t.position.y() == i.position.y())
+            return true;
+    for(auto& i : pipe)
         if(t.position.x() + t.width() == i.position.x() && t.position.y() == i.position.y())
             return true;
     return false;
@@ -150,6 +164,39 @@ void Map::check_crash()
             else if(str == "right") {
                 if(hero->velocity.x() < 0)
                 hero->velocity.x(0);
+                hero->position.x(i.position.x() + i.width());
+            }
+        }
+    }
+
+    for(auto& i : pipe) {
+        bool l = left_exist_object(i),
+            r = right_exist_object(i);
+        string str = collision(*hero, i, l, r);
+        if(str == "left")
+            flag = (1 << 1) | flag;//0没有 1右 2左 3左右
+        if(str == "right")
+            flag = (1 << 0) | flag;
+        if(str != "") {
+            //cout << str <<' '<<i.type()<<' '<<i.position.x()/36<<' '<<i.position.y()/36<< endl;
+            if(str == "top") {
+                if(hero->velocity.y() > 0)
+                    hero->velocity.y(0);
+                hero->position.y(i.position.y() - hero->height());
+            }
+            else if(str == "bottom") {
+                if(hero->velocity.y() < 0)
+                    hero->velocity.y(0);
+                hero->position.y(i.position.y() + i.height());
+            }
+            else if(str == "left") {
+                if(hero->velocity.x() > 0)
+                    hero->velocity.x(0);
+                hero->position.x(i.position.x() - hero->width());
+            }
+            else if(str == "right") {
+                if(hero->velocity.x() < 0)
+                    hero->velocity.x(0);
                 hero->position.x(i.position.x() + i.width());
             }
         }

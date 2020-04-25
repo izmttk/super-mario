@@ -7,19 +7,23 @@
 #include <graphics.h>
 #include "Global.h"
 #include "Rocket.h"
+#include "Pipe.h"
+
 
 class Map
 {
     private:
         IMAGE background;
         vector<Rocket> rocket;
+        vector<Pipe> pipe;
+
         //vector<Rocket> rocket_sorted_by_left;
         //vector<Rocket> rocket_sorted_by_right;
         BaseObject*  hero;
         int _width;
         int _height;
     public:
-        Map():background(NULL), rocket({}),hero(NULL),_width(0),_height(0){};
+        Map():background(NULL), rocket({}), pipe({}), hero(NULL),_width(0),_height(0){};
         void init(BaseObject* h);
         void show(Vector offset);
         int width();
@@ -27,8 +31,8 @@ class Map
         void update();
         bool left_exist_object(BaseObject& t);
         bool right_exist_object(BaseObject& t);
-        void check_crash();
         string collision(BaseObject& a, BaseObject& b, bool left_exist_object, bool right_exist_object);
+        void check_crash();
 };
 
 

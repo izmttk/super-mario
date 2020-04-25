@@ -15,13 +15,20 @@ void start() {
 
 //更新数据
 void update() {
+    double speed = NORMAL_RUN_SPEED;
+    double jump = NORMAL_JUMP_SPEED;
+
+    if(GetAsyncKeyState(VK_SHIFT)) {
+        speed += 0.5;
+        jump -= 0.5;
+    }
     if(GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT)) {
         if(GetAsyncKeyState(VK_SPACE))
-            mario.jump();
+            mario.jump(jump);
         if(GetAsyncKeyState(VK_LEFT))
-            mario.turn(LEFT), mario.run();
+            mario.turn(LEFT), mario.run(speed);
         if(GetAsyncKeyState(VK_RIGHT))
-            mario.turn(RIGHT), mario.run();
+            mario.turn(RIGHT), mario.run(speed);
     }
     else mario.still();
 }
@@ -59,7 +66,7 @@ int main()
 
     BeginBatchDraw();
 
-    const int max_ups = 120;
+    const int max_ups = 240;
     const int max_fps = 120;
 
     const int update_skip_time = 1000 / max_ups;
