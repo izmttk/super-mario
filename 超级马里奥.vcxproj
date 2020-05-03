@@ -152,8 +152,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseObject.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Pipe.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Rocket.cpp" />
@@ -161,12 +163,14 @@
     <ClCompile Include="超级马里奥.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="BaseObject.h" />
     <ClInclude Include="Pipe.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="Rocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

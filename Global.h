@@ -4,6 +4,8 @@
 #define WINDOWS_WIDTH 700
 #define WINDOWS_HEIGHT 504
 
+#define unit_length 36
+
 #define DEBUG
 #ifdef DEBUG
 #include<iostream>

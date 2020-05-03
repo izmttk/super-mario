@@ -84,25 +84,42 @@ class Figure {
         int  height();
 };
 
-
 class BaseObject
 {
     private:
         int _width;
         int _height;
+        string _type;
+        int id;
+        static int counter;
+        bool killed;
     public:
         Position position;
         Velocity velocity;
         Acceleration acceleration;
         Figure figure;
-        BaseObject():_width(0),_height(0),position(), velocity(), acceleration(0, GRAVITY), figure(){}
+        BaseObject():
+            id(counter++),_width(0),_height(0),_type(),position(), velocity(), acceleration(0, GRAVITY), figure(), killed(0) {}
+        BaseObject(const double x, const double y):
+            id(counter++), _width(0), _height(0), _type(), position(x,y), velocity(), acceleration(0, GRAVITY), figure(), killed(0) {}
+        BaseObject(const double x, const double y, int width, int height):
+            id(counter++), _width(width), _height(height), _type(), position(x, y), velocity(), acceleration(0, GRAVITY), figure(), killed(0) {}
+        BaseObject(const double x, const double y, int width, int height, string type):
+            id(counter++), _width(width), _height(height), _type(type), position(x, y), velocity(), acceleration(0, GRAVITY), figure(), killed(0) {}
+        ~BaseObject() { counter--; }
         int side_crash = 0;
         int  width();
         int  height();
+        int  get_id();
+        string type();
         void width(int w);
         void height(int h);
+        void type(string t);
         void update(double time);
         void show(Vector& offset);
+        virtual void kill();
+        bool is_killed();
+        virtual void init() = 0;
 };
 
 

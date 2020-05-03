@@ -87,3 +87,8 @@ void Mario::init() {
 
     SetWorkingImage(NULL);
 }
+
+void Mario::kill()
+{
+    BaseObject::kill();
+}

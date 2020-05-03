@@ -1,12 +1,15 @@
-﻿#include<conio.h>
-#include<ctime>
-#include <chrono>   
+﻿#include <conio.h>
+#include <ctime>
+#include <chrono>
+#include <process.h>
 #include "Mario.h"
+#include "Enemy.h"
 #include "Map.h"
-//#include "Player.h"
+#include "Controller.h"
 
 Mario mario;
-Map map;
+Map map1;
+Controller ctl;
 //开始界面
 void start() {
 
@@ -23,8 +26,10 @@ void update() {
         jump -= 0.5;
     }
     if(GetAsyncKeyState(VK_SPACE) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT)) {
-        if(GetAsyncKeyState(VK_SPACE))
+        if(GetAsyncKeyState(VK_SPACE)) {
+            ctl.play_music("jump");
             mario.jump(jump);
+        }
         if(GetAsyncKeyState(VK_LEFT))
             mario.turn(LEFT), mario.run(speed);
         if(GetAsyncKeyState(VK_RIGHT))
@@ -36,22 +41,22 @@ void update() {
 //刷新画面
 void reflush(double time) {
     mario.update(time);
-    map.update();
+    map1.update(time);
     cleardevice();
 
     //offset:地图和人物相对视窗位移，用于使视窗跟随人物移动
     //开头处人物未超过视窗宽度1/2，不发生位移
     Vector offset(0, 0);
     if(mario.position.x() + mario.width() / 2 >= WINDOWS_WIDTH / 2 && 
-       mario.position.x() + mario.width() / 2 <= map.width() - WINDOWS_WIDTH / 2) {
+       mario.position.x() + mario.width() / 2 <= map1.width() - WINDOWS_WIDTH / 2) {
         //始终保持人物居中
         offset.x(-(mario.position.x() + mario.width() / 2 - WINDOWS_WIDTH / 2));
     }
-    else if(mario.position.x() + mario.width() / 2 > map.width() - WINDOWS_WIDTH / 2) {
+    else if(mario.position.x() + mario.width() / 2 > map1.width() - WINDOWS_WIDTH / 2) {
         //人物距离结束处不足窗口1/2，停止位移
-        offset.x(-(map.width() - WINDOWS_WIDTH));
+        offset.x(-(map1.width() - WINDOWS_WIDTH));
     }
-    map.show(offset);
+    map1.show(offset);
     mario.show(offset);
     FlushBatchDraw();
 }
@@ -60,10 +65,9 @@ void reflush(double time) {
 int main()
 {
     initgraph(WINDOWS_WIDTH, WINDOWS_HEIGHT, SHOWCONSOLE);
-
+    ctl.play_music("gaming");
     mario.init();
-    map.init(&mario);
-
+    map1.init(&mario);
     BeginBatchDraw();
 
     const int max_ups = 240;
@@ -97,4 +101,6 @@ int main()
 
     EndBatchDraw();
     closegraph();
+
+    return 0;
 }
