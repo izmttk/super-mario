@@ -1,6 +1,7 @@
 #include "Map.h"
+#include "Controller.h"
 #include <algorithm>
-
+extern Controller ctl;
 void Map::init(BaseObject* h)
 {
     hero = h;
@@ -11,10 +12,11 @@ void Map::init(BaseObject* h)
     //单元格为35*35的方格，全地图横向228个单元，纵向14个单元
     //注意坐标是从0开始的
     //测试用
-    add_rocket(0, 10, 1, 1, "rock1");
-    add_rocket(0, 11, 1, 1, "rock1");
-    add_rocket(2, 10, 1, 1, "rock1");
-    add_rocket(2, 11, 1, 1, "rock1");
+    object.clear();
+    //add_rocket(0, 10, 1, 1, "rock1");
+    //add_rocket(0, 11, 1, 1, "rock1");
+    //add_rocket(2, 10, 1, 1, "rock1");
+    //add_rocket(2, 11, 1, 1, "rock1");
 
     //铺垫底层基石
     add_rocket(-1, 0, 1, 14);
@@ -63,6 +65,7 @@ void Map::init(BaseObject* h)
     add_pipe(163, 10, 2, 2);
     add_pipe(179, 10, 2, 2);
 
+    enemy.clear();
     add_enemy(6, 11, 6, 14);
     add_enemy(20, 7, 20, 24);
     add_enemy(40, 11, 40, 45);
@@ -186,6 +189,7 @@ void Map::check_collision()
             string str = collision(*hero, *i, 0, 0);
             if(str == "top") {
                 i->kill();
+                ctl.play_music("killenemy");
             }
             else if(str == "left" || str == "right") {
                 hero->kill();

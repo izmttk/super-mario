@@ -12,7 +12,7 @@ Map map1;
 Controller ctl;
 //开始界面
 void start() {
-
+    ctl.welcome();
 }
 
 
@@ -64,43 +64,48 @@ void reflush(double time) {
 
 int main()
 {
-    initgraph(WINDOWS_WIDTH, WINDOWS_HEIGHT, SHOWCONSOLE);
-    ctl.play_music("gaming");
-    mario.init();
-    map1.init(&mario);
+    
+    initgraph(WINDOWS_WIDTH, WINDOWS_HEIGHT);
     BeginBatchDraw();
 
-    const int max_ups = 240;
-    const int max_fps = 120;
+    while(true) {
+        mario.init();
+        map1.init(&mario);
+        start();
+        const int max_ups = 240;
+        const int max_fps = 120;
 
-    const int update_skip_time = 1000 / max_ups;
-    const int frame_skip_time = 1000 / max_fps;
+        const int update_skip_time = 1000 / max_ups;
+        const int frame_skip_time = 1000 / max_fps;
 
-    using namespace std::chrono;
+        using namespace std::chrono;
 
-    auto update_time_tick = steady_clock::now();
-    auto frame_time_tick = steady_clock::now();
+        auto update_time_tick = steady_clock::now();
+        auto frame_time_tick = steady_clock::now();
 
-    double update_time_interval;
-    double frame_time_interval;
-
-    bool game_is_running = true;
-    while(game_is_running) {
-        auto now = steady_clock::now();
-        update_time_interval = duration<double, std::milli>(now - update_time_tick).count();
-        if(update_time_interval >= update_skip_time) {
-            update();
-            update_time_tick = now;
+        double update_time_interval;
+        double frame_time_interval;
+        while(!mario.is_killed()) {
+            auto now = steady_clock::now();
+            update_time_interval = duration<double, std::milli>(now - update_time_tick).count();
+            if(update_time_interval >= update_skip_time) {
+                update();
+                update_time_tick = now;
+            }
+            frame_time_interval = duration<double, std::milli>(now - frame_time_tick).count();
+            if(frame_time_interval >= frame_skip_time) {
+                reflush(frame_time_interval);
+                frame_time_tick = now;
+            }
+            if(mario.is_win()) {
+                ctl.win();
+                break;
+            }
         }
-        frame_time_interval = duration<double, std::milli>(now - frame_time_tick).count();
-        if(frame_time_interval >= frame_skip_time) {
-            reflush(frame_time_interval);
-            frame_time_tick = now;
-        }
+        if(mario.is_killed())ctl.lose();
     }
 
     EndBatchDraw();
     closegraph();
-
     return 0;
 }

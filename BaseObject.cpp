@@ -58,6 +58,12 @@ void   Figure::addFigure(string name, vector<IMAGE> imgs, vector<IMAGE> masks, f
     }
     figures.push_back(FigureData{name, imgs, masks, tigger});
 }
+void Figure::clear()
+{
+    figure_cnt = 0;
+    figures.clear();
+    _status = "default";
+}
 void   Figure::update(int x, int y) {
     for(auto& i : figures)
     {
@@ -103,8 +109,7 @@ int    Figure::height() {
     return _height;
 }
 
-int BaseObject::counter = 0;
-
+int    BaseObject::counter = 0;
 int    BaseObject::width() {
     return _width;
 }
@@ -139,14 +144,15 @@ void   BaseObject::show(Vector& offset) {
 
     figure.update(static_cast<int>(round(position.x()) + offset.x()), static_cast<int>(round(position.y()) + offset.y()));
 }
-
-
-void BaseObject::kill()
+void   BaseObject::kill()
 {
     killed = true;
 }
-
-bool BaseObject::is_killed()
+void   BaseObject::revive()
+{
+    killed = false;
+}
+bool   BaseObject::is_killed()
 {
     return killed == true;
 }

@@ -1,7 +1,6 @@
 #include "Rocket.h"
 
 
-
 void Rocket::setRocket(int x, int y, int width, int height, string _type)
 {
     type(_type);
@@ -28,7 +27,9 @@ void Rocket::init() {
     vector<IMAGE> imgs, masks;
     IMAGE temp;
 
-    for(int i = 0; i < 7; i++) {
+    for(int i = 0; i < 7; i++)
+    if(names[i]==type())
+    {
         imgs.clear(); masks.clear();
         SetWorkingImage(&origin);
         getimage(&temp, width * i, 0, width, height);

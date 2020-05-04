@@ -76,6 +76,7 @@ class Figure {
     public:
         Figure():figures(), figure_cnt(0),_width(0),_height(0),_status("default") {}
         void addFigure(string name, vector<IMAGE> imgs, vector<IMAGE> masks, function<bool(void)> tigger);
+        void clear();
         void update(int x, int y);
         void turn();
         string status();
@@ -118,6 +119,7 @@ class BaseObject
         void update(double time);
         void show(Vector& offset);
         virtual void kill();
+        virtual void revive();
         bool is_killed();
         virtual void init() = 0;
 };

@@ -16,10 +16,7 @@ class Controller
         void win();
         void lose();
         void play_music(string type);
-        void show_welcome_ui();
-        void show_gaming_ui();
-        void show_lose_ui();
-        void show_help_ui();
+        void show_ui(string type);
 };
 
 

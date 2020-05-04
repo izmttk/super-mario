@@ -24,6 +24,7 @@ class Mario: public BaseObject
         void turn(int d = RIGHT);
         void init();
         void kill();
+        bool is_win();
 };
 
 
