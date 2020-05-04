@@ -25,7 +25,6 @@ void Map::init(BaseObject* h)
     add_rocket(71, 12, 15, 2);
     add_rocket(89, 12, 64, 2);
     add_rocket(155, 12, 73, 2);
-    add_rocket(0, 14, 227, 1);
     
     //ÆÌµæÄ¬ÈÏÉ½Çğ
     for(int i=0;i<4;i++) add_rocket((134+i), (11-i), 1, (i+1));
@@ -113,6 +112,7 @@ void Map::update(double time)
     }
     remove_if(enemy.begin(), enemy.end(), [](Enemy* val) {return val->is_removed();});
     check_collision();
+    if(hero->position.y() > WINDOWS_HEIGHT)hero->kill();
 }
 
 bool Map::left_exist(BaseObject &t)
