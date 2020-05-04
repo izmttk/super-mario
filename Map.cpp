@@ -100,7 +100,7 @@ int Map::width() {
 }
 int Map::height() {
     return _height;
-}
+}   
 void Map::update(double time)
 {
     for(auto i : enemy) {
@@ -108,7 +108,7 @@ void Map::update(double time)
             i->velocity.x(-i->velocity.x());
         if(i->position.x() > i->move_range_right())
             i->velocity.x(-i->velocity.x());
-        i->update(time);
+        i->update(time);   
     }
     remove_if(enemy.begin(), enemy.end(), [](Enemy* val) {return val->is_removed();});
     check_collision();
@@ -155,7 +155,6 @@ void Map::check_collision()
             if(str == "right")
                 flag = (1 << 0) | flag;
             if(str != "") {
-                //cout << str <<' '<<i.type()<<' '<<i.position.x()/36<<' '<<i.position.y()/36<< endl;
                 if(str == "top") {
                     if(hero->velocity.y() > 0)
                         hero->velocity.y(0);
@@ -257,8 +256,6 @@ string Map::collision(BaseObject &a,BaseObject &b,bool left_exist,bool right_exi
     else if(ax + a.width() > bx + b.width() && ax <= bx + b.width() &&
        ay + a.height() >= by && ay < by + b.height()) {
         if(!right_exist) {
-            //cout << "a.x:" << ax << "\t\ta.y:" << ay << "\t\ta.width:" << a.width() << "\ta.height:" << a.height() << endl;
-            //cout << "b.x:" << bx << "\t\tb.y:" << by << "\t\tb.width:" << b.width() << "\tb.height:" << b.height() << endl;
             return "right";
         }
     }
