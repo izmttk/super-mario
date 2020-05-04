@@ -1,31 +1,17 @@
 #include "Rocket.h"
 
 
-Rocket::Rocket(int x, int y, int width, int height, string type)
+void Rocket::setRocket(int x, int y, int width, int height, string _type)
 {
-    _type = type;
+    type(_type);
     position.x(x);
     position.y(y);
     this->width(width);
     this->height(height);
-}
-
-void Rocket::setRocket(int x, int y, int width, int height, string type)
-{
-    _type = type;
-    position.x(x);
-    position.y(y);
-    this->width(width);
-    this->height(height);
-}
-
-string Rocket::type()
-{
-    return _type;
 }
 
 void Rocket::init() {
-    if(_type == "rock0") return;
+    if(type() == "rock0") return;
     LPCTSTR img_src, mask_src;
     img_src = _T("assets\\images\\rock.png");
     mask_src = _T("assets\\images\\rock_mask.png");
@@ -41,7 +27,9 @@ void Rocket::init() {
     vector<IMAGE> imgs, masks;
     IMAGE temp;
 
-    for(int i = 0; i < 7; i++) {
+    for(int i = 0; i < 7; i++)
+    if(names[i]==type())
+    {
         imgs.clear(); masks.clear();
         SetWorkingImage(&origin);
         getimage(&temp, width * i, 0, width, height);

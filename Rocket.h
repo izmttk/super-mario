@@ -5,13 +5,11 @@
 #include "BaseObject.h"
 class Rocket : public BaseObject
 {
-    private:
-        string _type;
     public:
-        Rocket():BaseObject(), _type("rock0"){}
-        Rocket(int x, int y, int width = 1, int height = 1, string type = "rock0");
+        Rocket():BaseObject(){}
+        Rocket(int x, int y, int width = 1, int height = 1, string type = "rock0"):
+            BaseObject(x, y, width, height, type){}
         void setRocket(int x, int y, int width = 1, int height = 1, string type="rock0");
-        string type();
         void init();
 };
 

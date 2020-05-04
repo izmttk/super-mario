@@ -28,6 +28,16 @@ void Mario::turn(int d) {
 }
 
 void Mario::init() {
+    direction = RIGHT;
+    position.x(MARIO_X);
+    position.y(MARIO_Y);
+    velocity.x(0);
+    velocity.y(0);
+    acceleration.x(0);
+    acceleration.y(GRAVITY);
+    revive();
+    figure.clear();
+
     LPCTSTR img_src, mask_src;
     img_src = _T("assets\\images\\mario.png");
     mask_src = _T("assets\\images\\mario_mask.png");
@@ -86,4 +96,16 @@ void Mario::init() {
     });
 
     SetWorkingImage(NULL);
+}
+
+void Mario::kill()
+{
+    BaseObject::kill();
+}
+
+bool Mario::is_win()
+{
+    if(position.x() >= 220 * unit_length && position.x() <= 221 * unit_length && position.y() >= 10 * unit_length && position.y() <= 12 * unit_length)
+        return true;
+    return false;
 }
