@@ -2,6 +2,19 @@
 #include "Controller.h"
 #include <algorithm>
 extern Controller ctl;
+Map::~Map()
+{
+    auto it1 = object.begin();
+    while(it1 != object.end()) {
+        delete* it1;
+        it1 = object.erase(it1);
+    }
+    auto it2 = enemy.begin();
+    while(it2 != enemy.end()) {
+        delete* it2;
+        it2 = enemy.erase(it2);
+    }
+}
 void Map::init(BaseObject* h)
 {
     hero = h;
@@ -11,8 +24,14 @@ void Map::init(BaseObject* h)
     _height = background.getheight();
     //单元格为35*35的方格，全地图横向228个单元，纵向14个单元
     //注意坐标是从0开始的
-    //测试用
+
+    auto it1 = object.begin();
+    while(it1 != object.end()) {
+        delete *it1;
+        it1 = object.erase(it1);
+    }
     object.clear();
+    //测试用
     //add_rocket(0, 10, 1, 1, "rock1");
     //add_rocket(0, 11, 1, 1, "rock1");
     //add_rocket(2, 10, 1, 1, "rock1");
@@ -64,6 +83,11 @@ void Map::init(BaseObject* h)
     add_pipe(163, 10, 2, 2);
     add_pipe(179, 10, 2, 2);
 
+    auto it2 = enemy.begin();
+    while(it2 != enemy.end()) {
+        delete *it2;
+        it2 = enemy.erase(it2);
+    }
     enemy.clear();
     add_enemy(6, 11, 6, 14);
     add_enemy(20, 7, 20, 24);
@@ -110,7 +134,14 @@ void Map::update(double time)
             i->velocity.x(-i->velocity.x());
         i->update(time);   
     }
-    remove_if(enemy.begin(), enemy.end(), [](Enemy* val) {return val->is_removed();});
+    auto it = enemy.begin();
+    while(it != enemy.end()) {
+        if((*it)->is_removed()) {
+            delete* it;
+            it = enemy.erase(it);
+        }
+        else it++;
+    }
     check_collision();
     if(hero->position.y() > WINDOWS_HEIGHT)hero->kill();
 }

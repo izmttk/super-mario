@@ -21,6 +21,7 @@ class Map
         int _height;
     public:
         Map():background(NULL), object({}), enemy({}), hero(NULL),_width(0),_height(0){};
+        ~Map();
         void init(BaseObject* h);
         void show(Vector offset);
         int width();
