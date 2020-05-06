@@ -72,10 +72,10 @@ int main()
         mario.init();
         map1.init(&mario);
         start();
-        const int max_ups = 240;
-        const int max_fps = 120;
+        const int max_sps = 120;//最大采样率
+        const int max_fps = 120;//最大帧率
 
-        const int update_skip_time = 1000 / max_ups;
+        const int update_skip_time = 1000 / max_sps;
         const int frame_skip_time = 1000 / max_fps;
 
         using namespace std::chrono;

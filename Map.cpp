@@ -218,6 +218,7 @@ void Map::check_collision()
         {
             string str = collision(*hero, *i, 0, 0);
             if(str == "top") {
+                hero->velocity.y(-0.4);
                 i->kill();
                 ctl.play_music("killenemy");
             }
